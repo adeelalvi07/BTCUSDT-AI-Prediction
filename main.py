@@ -161,10 +161,7 @@ def load_csv(path):
 
 @st.cache_resource
 def load_model(path):
-    try:
-        return joblib.load(path)
-    except Exception:
-        return None
+    return joblib.load(path)
 
 
 # ============================================================
@@ -477,10 +474,13 @@ classification_model = None
 scaler = None
 feature_names = None
 
-
 if regression_model_path:
-    regression_model = load_model(regression_model_path)
-
+    try:
+        regression_model = load_model(regression_model_path)
+        st.sidebar.success("✅ Regression Model Loaded")
+    except Exception as e:
+        st.sidebar.error("❌ Regression Model Loading Failed")
+        st.sidebar.code(str(e))
 
 if classification_model_path:
     classification_model = load_model(
